@@ -13,7 +13,9 @@ const createToken = async (user, secret, expiresIn) => {
 // Get All Users
 //
 const getAll = async () => {
-  return await models.User.findAll();
+  return await models.User.findAll({
+    include: [models.Project]
+  });
 };
 
 //

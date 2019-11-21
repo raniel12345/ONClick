@@ -23,7 +23,7 @@ const projectStatus = (sequelize, DataTypes) => {
   );
 
   ProjectStatus.associate = models => {
-    ProjectStatus.hasOne(models.Project, { as: "Status" });
+    ProjectStatus.hasMany(models.Project);
   };
 
   return ProjectStatus;

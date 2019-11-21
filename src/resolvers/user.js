@@ -1,7 +1,7 @@
 import { combineResolvers } from "graphql-resolvers";
 import { isAdmin } from "./authorization";
 import User from "../controllers/user";
-import models from "../models";
+import Project from "../controllers/project";
 
 export default {
   Query: {
@@ -28,5 +28,14 @@ export default {
     deleteUser: combineResolvers(isAdmin, async (parent, { id }) => {
       return await User.deleteById(id);
     })
+  },
+  User: {
+    projects: async (user, args, { models }) => {
+      return await models.Project.findAll({
+        where: {
+          userId: user.id
+        }
+      });
+    }
   }
 };

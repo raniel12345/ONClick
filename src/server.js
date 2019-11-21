@@ -4,7 +4,8 @@ import express from "express";
 import { ApolloServer, AuthenticationError } from "apollo-server-express";
 import jwt from "jsonwebtoken";
 
-// import DataLoader from "dataloader";
+import DataLoader from "dataloader";
+import dataLoaders from "./loaders";
 
 import "dotenv/config";
 
@@ -13,7 +14,6 @@ import resolvers from "./resolvers";
 import models, { sequelize } from "./models";
 // import user from "./schema/user";
 // import { Model } from "sequelize/types";
-// import loaders from "./loaders";
 
 const is_production = process.env.NODE_ENV === "production" ? false : true;
 // const isTest = !!process.env.TEST_DATABASE;
@@ -61,12 +61,17 @@ const server = new ApolloServer({
     };
   },
   context: async ({ req, connection }) => {
+    var loaders = {
+      user: new DataLoader(keys => dataLoaders.user.batchUsers(keys, models)),
+      projectStatus: new DataLoader(keys =>
+        dataLoaders.projectStatus.batchStatus(keys, models)
+      )
+    };
+
     if (connection) {
       return {
-        models
-        // loaders: {
-        //   user: new DataLoader(keys => loaders.user.batchUsers(keys, models))
-        // }
+        models,
+        loaders
       };
     }
 
@@ -74,13 +79,11 @@ const server = new ApolloServer({
       const me = await getUserTokenData(req);
 
       return {
-        // models,
+        models,
         is_production,
         me,
-        secret: process.env.SECRET
-        // loaders: {
-        //   user: new DataLoader(keys => loaders.user.batchUsers(keys, models))
-        // }
+        secret: process.env.SECRET,
+        loaders
       };
     }
   },
@@ -128,16 +131,33 @@ const bulkInsert = async date => {
     description: "test"
   });
 
+  await models.ProjectStatus.create({
+    status: "status 2",
+    description: "test"
+  });
+
   let user = await models.User.findOne({
     where: { id: 1 }
   });
 
-  await user.createProject({
-    title: "Sample",
-    description: "asdfasdf",
-    modules: ["as", "asd"],
-    statusId: 1
-  });
+  await user.createProject(
+    {
+      title: "Sample",
+      description: "asdfasdf",
+      modules: ["as", "asd"],
+      projectStatusId: 1
+    },
+    {
+      include: [models.ProjectStatus]
+    }
+  );
+
+  await models.Project.update(
+    { projectStatusId: 2 },
+    {
+      where: { id: 1 }
+    }
+  );
 
   // console.log(
   //   await models.User.findAll({

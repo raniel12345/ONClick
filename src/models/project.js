@@ -42,6 +42,7 @@ const project = (sequelize, DataTypes) => {
 
   Project.associate = models => {
     Project.belongsTo(models.User);
+    Project.belongsTo(models.ProjectStatus);
     Project.hasMany(models.ProjectFeature);
     Project.hasMany(models.ProjectIssue);
     Project.belongsToMany(models.User, {

@@ -9,7 +9,7 @@ export default gql`
     CALENDAR
     DOCUMENTS
     GANTT
-    FILESS
+    FILES
   }
 
   type Project {
@@ -40,11 +40,11 @@ export default gql`
     description: String!
     tags: [String!]!
     homePage: String!
-    public: Boolean!
+    isPublic: Boolean!
     modules: [Module!]!
   }
 
   extend type Mutation {
-    createProject(projectInput: ProjectInput): Project!
+    createProject(projectInput: ProjectInput!): Project!
   }
 `;

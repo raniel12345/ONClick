@@ -14,6 +14,7 @@ export default gql`
     username: String!
     email: String!
     role: UserRole!
+    projects: [Project!]
     createdAt: Date!
     updatedAt: Date!
     deletedAt: Date!
