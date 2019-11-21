@@ -53,8 +53,39 @@ const createNew = async (projectInput, { id }) => {
     });
 };
 
+const deleteById = async (projectId, { id }) => {
+  let currentUser = models.User.findByPk(id);
+  let userProject = models.Project.findByPk(projectId);
+
+  return await currentUser.then(async user => {
+    if (user !== null) {
+      return await userProject.then(async project => {
+        if (project !== null) {
+          if (user.id === project.userId) {
+            return await project
+              .destroy()
+              .then(result => {
+                console.log(result);
+                return true;
+              })
+              .catch(err => {
+                console.log(err);
+                return false;
+              });
+          }
+        } else {
+          throw new UserInputError("Project not found");
+        }
+      });
+    } else {
+      throw new AuthenticationError("No user found with this token.");
+    }
+  });
+};
+
 export default {
   createNew,
   getAll,
-  getById
+  getById,
+  deleteById
 };

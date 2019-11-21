@@ -13,8 +13,11 @@ export default {
   },
   Mutation: {
     createProject: async (parent, { projectInput }, { me }) => {
-      console.log(projectInput);
+      //console.log(projectInput);
       return await Project.createNew(projectInput, me);
+    },
+    deleteProject: async (parent, { id }, { me }) => {
+      return await Project.deleteById(id, me);
     }
   },
   Project: {

@@ -46,5 +46,6 @@ export default gql`
 
   extend type Mutation {
     createProject(projectInput: ProjectInput!): Project!
+    deleteProject(id: ID!): Boolean
   }
 `;
