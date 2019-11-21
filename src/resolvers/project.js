@@ -12,13 +12,10 @@ export default {
     }
   },
   Mutation: {
-    createProject: combineResolvers(
-      isAdmin,
-      async (parent, { projectInput }, { me }) => {
-        console.log(projectInput);
-        return await Project.createNew(projectInput, me);
-      }
-    )
+    createProject: async (parent, { projectInput }, { me }) => {
+      console.log(projectInput);
+      return await Project.createNew(projectInput, me);
+    }
   },
   Project: {
     owner: async (project, args, { loaders }) => {

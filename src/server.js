@@ -122,8 +122,18 @@ const bulkInsert = async date => {
     username: "Raniel",
     email: "Raniel.Garcia@onsemi.com",
     password: "test123123123213",
-    role: "ADMIN",
-    isDeleted: false
+    role: "ADMIN"
+  });
+
+  await models.User.create({
+    username: "Maricar",
+    email: "Maricar.Manalili@onsemi.com",
+    password: "test123123123213",
+    role: "NORMAL"
+  });
+
+  await models.User.destroy({
+    where: { id: 2 }
   });
 
   await models.ProjectStatus.create({
