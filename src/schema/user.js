@@ -16,6 +16,7 @@ export default gql`
     role: UserRole!
     createdAt: Date!
     updatedAt: Date!
+    deletedAt: Date!
     isDeleted: Boolean!
   }
 
@@ -26,7 +27,12 @@ export default gql`
   }
 
   extend type Mutation {
-    signUp(username: String!, email: String!, password: String!): Token!
+    signUp(
+      username: String!
+      email: String!
+      password: String!
+      role: UserRole!
+    ): Token!
     signIn(login: String!, password: String!): Token!
     deleteUser(id: ID!): Boolean!
   }

@@ -1,8 +1,9 @@
 import http from "http";
 import cors from "cors";
 import express from "express";
-import jwt from "jsonwebtoken";
 import { ApolloServer, AuthenticationError } from "apollo-server-express";
+import jwt from "jsonwebtoken";
+
 // import DataLoader from "dataloader";
 
 import "dotenv/config";
@@ -14,6 +15,11 @@ import models, { sequelize } from "./models";
 // import { Model } from "sequelize/types";
 // import loaders from "./loaders";
 
+const is_production = process.env.NODE_ENV === "production" ? false : true;
+// const isTest = !!process.env.TEST_DATABASE;
+// const isProduction = !!process.env.DATABASE_URL;
+const port = process.env.PORT || 8000;
+
 const app = express();
 app.use(cors());
 app.use((req, res, next) => {
@@ -21,19 +27,13 @@ app.use((req, res, next) => {
   next();
 });
 
-const is_production = process.env.NODE_ENV === "production" ? false : true;
-const isTest = !!process.env.TEST_DATABASE;
-const isProduction = !!process.env.DATABASE_URL;
-const port = process.env.PORT || 8000;
-
-const getMe = async req => {
-  const token = req.headers["x-token"];
+const getUserTokenData = async req => {
+  const token = req.headers["authorization"];
 
   if (token) {
     try {
       return await jwt.verify(token, process.env.SECRET);
     } catch (e) {
-      console.log(e);
       throw new AuthenticationError("Your session expired. Sign in again.");
     }
   }
@@ -71,10 +71,10 @@ const server = new ApolloServer({
     }
 
     if (req) {
-      const me = await getMe(req);
+      const me = await getUserTokenData(req);
 
       return {
-        models,
+        // models,
         is_production,
         me,
         secret: process.env.SECRET
@@ -100,7 +100,7 @@ sequelize
     // }
 
     // createUserWithProjects(new Date());
-    // bulkInsert();
+    bulkInsert();
 
     httpServer.listen({ port }, () => {
       console.log(`Apollo server on http://localhost:${port}/graphql`);
@@ -139,162 +139,162 @@ const bulkInsert = async date => {
     statusId: 1
   });
 
-  console.log(
-    await models.User.findAll({
-      include: [models.Project]
-    })
-  );
-
-  console.log(
-    await models.Project.findAll({
-      include: [models.User]
-    })
-  );
-};
-
-const createUserWithProjects = async date => {
-  await models.User.create(
-    {
-      username: "maricar",
-      email: "Maricar.Garcia@onsemi.com",
-      password: "testing",
-      role: "ADMIN",
-      isDeleted: false
-      // projects: [
-      //   {
-      //     title: "Testing Project",
-      //     description: "TESTING",
-      //     tags: ["test", "testing"],
-      //     isPublic: true,
-      //     modules: ["asdf"],
-      //     statusId: 1,
-      //     isDeleted: false
-      //   }
-      // ]
-    }
-    // {
-    //   include: [models.Project]
-    // }
-  );
-  //   .then(create => {
-  //   console.log(
-  //     create.get({
-  //       plain: true
-  //     })
-  //   );
-  // });
-
-  await models.User.create(
-    {
-      username: "raniel",
-      email: "Raniel.Garcia@onsemi.com",
-      password: "testing",
-      role: "ADMIN",
-      isDeleted: false
-      // projects: [
-      //   {
-      //     title: "Testing Project 123",
-      //     description: "TESTING",
-      //     tags: ["test", "testing"],
-      //     isPublic: true,
-      //     modules: ["asdf"],
-      //     statusId: 1,
-      //     isDeleted: false
-      //   }
-      // ]
-      // projectMembers: [
-      //   {
-      //     projectId: 1,
-      //     isDeleted: false
-      //   }
-      // ]
-    }
-    // ,
-    // {
-    //   include: [models.Project] //, models.ProjectMember
-    // }
-  ).then(create => {
-    console.log(
-      create.get({
-        plain: true
-      })
-    );
-  });
-
-  let user = await models.User.findAll({ where: { id: 1 } }).catch(err =>
-    console.log(err)
-  );
-
-  // let projectCreated = await models.Project.create({
-  //   title: "Testing Project 123",
-  //   description: "TESTING",
-  //   tags: ["test", "testing"],
-  //   isPublic: true,
-  //   modules: ["asdf"],
-  //   statusId: 1,
-  //   isDeleted: false
-  // });
-
-  // projectCreated.setUser(user);
-
-  // let group = await models.Group.create({
-  //   title: "AppsTeam",
-  //   description: "Testing",
-  //   isDeleted: false
-  // });
-
-  // await group.addUser(user);
-
-  // let usersGroups1 = await models.User.findAll({
-  //   include: [
-  //     {
-  //       model: models.Group,
-  //       as: "groups"
-  //     }
-  //   ]
-  // }).then(data => {
-  //   return data;
-  // });
-
-  // usersGroups1.forEach(user => {
-  //   console.log(user.username);
-  //   user.groups.forEach(group => {
-  //     console.log(group.title);
-  //   });
-  // });
-
-  // await models.Project.findByPk(1)
-  //   .then(project => {
-  //     return project.destroy();
-  //     //return project.destroy({force: true});
+  // console.log(
+  //   await models.User.findAll({
+  //     include: [models.Project]
   //   })
-  //   .then(project => {
-  //     //return task.restore();
-  //   });
-
-  // let usersGroups2 = await models.Group.findAll({
-  //   include: [
-  //     {
-  //       model: models.User,
-  //       as: "users"
-  //     }
-  //   ]
-  // });
-
-  // console.log(usersGroups2);
-
-  // let usersGroups = await models.User.findAll(
-  //   { where: { id: 1 } },
-  //   {
-  //     include: [
-  //       {
-  //         model: models.Group,
-  //         as: "groups",
-  //         attributes: ["id", "title"]
-  //       }
-  //     ]
-  //   }
   // );
 
-  // console.log(usersGroups);
+  // console.log(
+  //   await models.Project.findAll({
+  //     include: [models.User]
+  //   })
+  // );
 };
+
+// const createUserWithProjects = async date => {
+//   await models.User.create(
+//     {
+//       username: "maricar",
+//       email: "Maricar.Garcia@onsemi.com",
+//       password: "testing",
+//       role: "ADMIN",
+//       isDeleted: false
+//       // projects: [
+//       //   {
+//       //     title: "Testing Project",
+//       //     description: "TESTING",
+//       //     tags: ["test", "testing"],
+//       //     isPublic: true,
+//       //     modules: ["asdf"],
+//       //     statusId: 1,
+//       //     isDeleted: false
+//       //   }
+//       // ]
+//     }
+//     // {
+//     //   include: [models.Project]
+//     // }
+//   );
+//   //   .then(create => {
+//   //   console.log(
+//   //     create.get({
+//   //       plain: true
+//   //     })
+//   //   );
+//   // });
+
+//   await models.User.create(
+//     {
+//       username: "raniel",
+//       email: "Raniel.Garcia@onsemi.com",
+//       password: "testing",
+//       role: "ADMIN",
+//       isDeleted: false
+//       // projects: [
+//       //   {
+//       //     title: "Testing Project 123",
+//       //     description: "TESTING",
+//       //     tags: ["test", "testing"],
+//       //     isPublic: true,
+//       //     modules: ["asdf"],
+//       //     statusId: 1,
+//       //     isDeleted: false
+//       //   }
+//       // ]
+//       // projectMembers: [
+//       //   {
+//       //     projectId: 1,
+//       //     isDeleted: false
+//       //   }
+//       // ]
+//     }
+//     // ,
+//     // {
+//     //   include: [models.Project] //, models.ProjectMember
+//     // }
+//   ).then(create => {
+//     console.log(
+//       create.get({
+//         plain: true
+//       })
+//     );
+//   });
+
+//   let user = await models.User.findAll({ where: { id: 1 } }).catch(err =>
+//     console.log(err)
+//   );
+
+//   // let projectCreated = await models.Project.create({
+//   //   title: "Testing Project 123",
+//   //   description: "TESTING",
+//   //   tags: ["test", "testing"],
+//   //   isPublic: true,
+//   //   modules: ["asdf"],
+//   //   statusId: 1,
+//   //   isDeleted: false
+//   // });
+
+//   // projectCreated.setUser(user);
+
+//   // let group = await models.Group.create({
+//   //   title: "AppsTeam",
+//   //   description: "Testing",
+//   //   isDeleted: false
+//   // });
+
+//   // await group.addUser(user);
+
+//   // let usersGroups1 = await models.User.findAll({
+//   //   include: [
+//   //     {
+//   //       model: models.Group,
+//   //       as: "groups"
+//   //     }
+//   //   ]
+//   // }).then(data => {
+//   //   return data;
+//   // });
+
+//   // usersGroups1.forEach(user => {
+//   //   console.log(user.username);
+//   //   user.groups.forEach(group => {
+//   //     console.log(group.title);
+//   //   });
+//   // });
+
+//   // await models.Project.findByPk(1)
+//   //   .then(project => {
+//   //     return project.destroy();
+//   //     //return project.destroy({force: true});
+//   //   })
+//   //   .then(project => {
+//   //     //return task.restore();
+//   //   });
+
+//   // let usersGroups2 = await models.Group.findAll({
+//   //   include: [
+//   //     {
+//   //       model: models.User,
+//   //       as: "users"
+//   //     }
+//   //   ]
+//   // });
+
+//   // console.log(usersGroups2);
+
+//   // let usersGroups = await models.User.findAll(
+//   //   { where: { id: 1 } },
+//   //   {
+//   //     include: [
+//   //       {
+//   //         model: models.Group,
+//   //         as: "groups",
+//   //         attributes: ["id", "title"]
+//   //       }
+//   //     ]
+//   //   }
+//   // );
+
+//   // console.log(usersGroups);
+// };
