@@ -4,7 +4,9 @@ export default gql`
     id: ID!
     status: String!
     description: String!
-    isDeleted: Boolean!
+    createdAt: Date!
+    updatedAt: Date!
+    deletedAt: Date!
   }
 
   extend type Query {

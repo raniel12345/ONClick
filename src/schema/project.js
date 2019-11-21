@@ -24,8 +24,9 @@ export default gql`
     status: ProjectStatus!
     members: ProjectMember
     issues: [ProjectIssue!]
-    createdAt: String!
-    updatedAt: String!
+    createdAt: Date!
+    updatedAt: Date!
+    deletedAt: Date!
   }
 
   extend type Query {

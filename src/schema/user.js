@@ -17,7 +17,6 @@ export default gql`
     createdAt: Date!
     updatedAt: Date!
     deletedAt: Date!
-    isDeleted: Boolean!
   }
 
   extend type Query {

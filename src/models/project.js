@@ -33,10 +33,6 @@ const project = (sequelize, DataTypes) => {
         validate: {
           notEmpty: true
         }
-      },
-      isDeleted: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false
       }
     },
     {

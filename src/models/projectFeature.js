@@ -32,11 +32,7 @@ const projectFeature = (sequelize, DataTypes) => {
       },
       percentCompletion: DataTypes.INTEGER,
       startDate: DataTypes.DATEONLY,
-      dueDate: DataTypes.DATEONLY,
-      isDeleted: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false
-      }
+      dueDate: DataTypes.DATEONLY
     },
     {
       paranoid: true

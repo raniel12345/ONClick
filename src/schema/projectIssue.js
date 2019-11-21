@@ -20,7 +20,9 @@ export default gql`
     percentCompletion: Int!
     startDate: Date!
     dueDate: Date!
-    isDeleted: Boolean!
+    createdAt: Date!
+    updatedAt: Date!
+    deletedAt: Date!
   }
 
   extend type Query {

@@ -31,10 +31,6 @@ const user = (sequelize, DataTypes) => {
       },
       role: {
         type: DataTypes.STRING
-      },
-      isDeleted: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false
       }
     },
     {

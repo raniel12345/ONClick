@@ -1,31 +1,33 @@
 const groupUsers = (sequelize, DataTypes) => {
-  const GroupUser = sequelize.define("groupUser", {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true
-    },
-    userId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: "Users",
-        key: "id"
+  const GroupUser = sequelize.define(
+    "groupUser",
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+      },
+      userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: "Users",
+          key: "id"
+        }
+      },
+      groupId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: "Groups",
+          key: "id"
+        }
       }
     },
-    groupId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: "Groups",
-        key: "id"
-      }
-    },
-    isDeleted: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false
+    {
+      paranoid: true
     }
-  });
+  );
 
   GroupUser.associate = models => {
     GroupUser.belongsToMany(models.Project, {

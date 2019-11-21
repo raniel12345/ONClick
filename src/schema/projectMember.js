@@ -25,8 +25,9 @@ export default gql`
     id: ID!
     project: Project
     members: Members!
-    createdAt: String!
-    updatedAt: String!
+    createdAt: Date!
+    updatedAt: Date!
+    deletedAt: Date!
   }
 
   extend type Query {
