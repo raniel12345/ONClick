@@ -22,6 +22,9 @@ export default {
     signUp: async (parent, args, { secret }) => {
       return await User.createNew(args, secret);
     },
+    updateUser: async (parent, args, { secret, me }) => {
+      return await User.updateUser(args, secret, me);
+    },
     signIn: async (parent, args, { secret }) => {
       return await User.signIn(args, secret);
     },
@@ -32,6 +35,13 @@ export default {
   User: {
     projects: async (user, args, { models }) => {
       return await models.Project.findAll({
+        where: {
+          userId: user.id
+        }
+      });
+    },
+    projectStatuses: async (user, args, { models }) => {
+      return await models.ProjectStatus.findAll({
         where: {
           userId: user.id
         }

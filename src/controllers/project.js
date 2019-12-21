@@ -12,8 +12,6 @@ const getById = async projectId => {
 };
 
 const createNew = async (projectInput, { id }) => {
-  let user = models.User.findByPk(id);
-
   const {
     title,
     subProject,
@@ -24,7 +22,7 @@ const createNew = async (projectInput, { id }) => {
     modules
   } = projectInput;
 
-  return await user
+  return await models.User.findByPk(id)
     .then(async user => {
       if (user !== null) {
         var project = await user.createProject(
@@ -65,13 +63,15 @@ const deleteById = async (projectId, { id }) => {
             return await project
               .destroy()
               .then(result => {
-                console.log(result);
+                // console.log(result);
                 return true;
               })
               .catch(err => {
-                console.log(err);
+                // console.log(err);
                 return false;
               });
+          } else {
+            throw new UserInputError("Permission denied.");
           }
         } else {
           throw new UserInputError("Project not found");

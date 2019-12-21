@@ -1,5 +1,5 @@
-import { combineResolvers } from "graphql-resolvers";
-import { isAdmin } from "./authorization";
+// import { combineResolvers } from "graphql-resolvers";
+// import { isAdmin } from "./authorization";
 import Project from "../controllers/project";
 
 export default {

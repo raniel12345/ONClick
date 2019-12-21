@@ -37,6 +37,9 @@ const getUserTokenData = async req => {
       throw new AuthenticationError("Your session expired. Sign in again.");
     }
   }
+  // else {
+  //   throw new AuthenticationError("Token is required");
+  // }
 };
 
 const server = new ApolloServer({
@@ -136,18 +139,28 @@ const bulkInsert = async date => {
     where: { id: 2 }
   });
 
-  await models.ProjectStatus.create({
-    status: "Testing",
-    description: "test"
+  // await models.ProjectStatus.create({
+  //   status: "Testing",
+  //   description: "test"
+  // });
+
+  // await models.ProjectStatus.create({
+  //   status: "status 2",
+  //   description: "test"
+  // });
+
+  let user = await models.User.findOne({
+    where: { id: 1 }
   });
 
-  await models.ProjectStatus.create({
+  await user.createProjectStatus({
     status: "status 2",
     description: "test"
   });
 
-  let user = await models.User.findOne({
-    where: { id: 1 }
+  await user.createProjectStatus({
+    status: "Testing",
+    description: "test"
   });
 
   await user.createProject(

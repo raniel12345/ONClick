@@ -14,10 +14,6 @@ export default gql`
   }
 
   extend type Mutation {
-    createProjectStatus(
-      projectID: ID!
-      status: String!
-      description: String!
-    ): ProjectStatus!
+    createProjectStatus(status: String!, description: String!): ProjectStatus!
   }
 `;

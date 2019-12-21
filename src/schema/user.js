@@ -15,6 +15,7 @@ export default gql`
     email: String!
     role: UserRole!
     projects: [Project!]
+    projectStatuses: [ProjectStatus!]
     createdAt: Date!
     updatedAt: Date!
     deletedAt: Date!
@@ -33,6 +34,11 @@ export default gql`
       password: String!
       role: UserRole!
     ): Token!
+
+    updateUser(username: String!, email: String!, password: String!): Token!
+
+    updateUserRole(userId: ID!, role: UserRole): Token!
+
     signIn(login: String!, password: String!): Token!
     deleteUser(id: ID!): Boolean!
   }
